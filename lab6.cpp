@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <iomanip>
 
 using namespace std;
 
@@ -16,12 +15,46 @@ bool readmatrix(int** matrix, const int n, ifstream& file) {
     }
     return true;
 }
+// Function to get the max value of the matrix
+int getMaxValue(int** matrix, const int n) {
+    int maxVal = matrix[0][0];
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (matrix[i][j] > maxVal) {
+                maxVal = matrix[i][j];
+            }
+        }
+    }
+    return maxVal;
+}
 
 // Function to print matrix
 void printMatrix(int** matrix, const int n) {
+    // Find the maximum element in the matrix
+    int max_val = getMaxValue(matrix, n);
+
+    // Calculate the width of the maximum element
+    int max_width = 1;
+    int temp = max_val;
+    while (temp /= 10) {
+        max_width++;
+    }
+
+    // Print the matrix with fixed width
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            cout << setw(5) << matrix[i][j];
+            // Print the element with padding
+            cout << matrix[i][j];
+            // Calculate the padding needed for alignment
+            int width = 1;
+            int num = matrix[i][j];
+            while (num /= 10) {
+                width++;
+            }
+            int padding = max_width - width + 1;
+            for (int k = 0; k < padding; k++) {
+                cout << " ";
+            }
         }
         cout << endl;
     }
@@ -75,18 +108,7 @@ void updateElement(int** matrix, const int n, int row, int col, int newValue) {
     matrix[row-1][col-1] = newValue;
 }
 
-// Function to get the max value of the matrix
-int getMaxValue(int** matrix, const int n) {
-    int maxVal = matrix[0][0];
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            if (matrix[i][j] > maxVal) {
-                maxVal = matrix[i][j];
-            }
-        }
-    }
-    return maxVal;
-}
+
 
 // Function to transpose the matrix
 int** transposeMatrix(int** matrix, const int n) {
